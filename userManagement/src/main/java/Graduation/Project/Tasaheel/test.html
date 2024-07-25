@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Display Test</title>
+</head>
+<body>
+<h1>Display Image</h1>
+
+<h2>Retrieved Image:</h2>
+<img id="retrievedImage" src="" alt="No image" style="max-width: 500px;"/>
+
+<script>
+    const retrievedImage = document.getElementById('retrievedImage');
+
+    window.onload = function() {
+        fetchProfile(49); // Fetch the image with ID 49
+    };
+
+    function fetchProfile(userId) {
+        const token = 'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6IlJPTEVfVVNFUiIsInVzZXJJZCI6NDEsInN1YiI6InVzZXJuYW1lNyIsImlhdCI6MTcyMDA0NzkxMiwiZXhwIjoxNzIwNjUyNzEyfQ.SunHnAdhR3yQ8IkyiF_o_-nTpaoKGI963OwtrURZkF8'; // Replace with your actual token
+
+        fetch(`http://localhost:9968/users/getProfilePic/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(base64Image => {
+                retrievedImage.src = `data:image/jpeg;base64,${base64Image}`;
+            })
+            .catch(error => {
+                console.error('Error fetching image:', error);
+                retrievedImage.alt = 'Failed to load image';
+            });
+    }
+</script>
+</body>
+</html>
